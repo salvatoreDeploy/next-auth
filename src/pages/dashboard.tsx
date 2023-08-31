@@ -1,6 +1,8 @@
 import { useContext, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { api } from "./api/api";
+import { withSSRAuth } from "../utils/withSSRAuth";
+import { api } from "./api/apiClient";
+import { setupAPIClient } from "./api/api";
 
 export default function Dasboard() {
   const { user } = useContext(AuthContext);
@@ -8,7 +10,7 @@ export default function Dasboard() {
   useEffect(() => {
     api
       .get("/me")
-      .then((response) => console.log(response))
+      .then((response) => console.log(response.data))
       .catch((error) => console.log(error));
   }, []);
 
@@ -19,3 +21,15 @@ export default function Dasboard() {
     </>
   );
 }
+
+export const getServerSideProps = withSSRAuth(async (ctx) => {
+  const apiClient = setupAPIClient(ctx);
+
+  const response = await apiClient.get("/me");
+
+  console.log(response.data);
+
+  return {
+    props: {},
+  };
+});
