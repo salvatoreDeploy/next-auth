@@ -2,8 +2,7 @@ import axios, { AxiosError } from "axios";
 import { parseCookies, setCookie } from 'nookies'
 import { signOut } from "../../context/AuthContext";
 import { GetServerSidePropsContext } from "next";
-
-
+import { AuthTokenError } from "./errors/AuthTokenError";
 
 let isRefreshing = false
 let failedRequestQueue: { onSuccess: (token: string) => void; onFailure: (err: AxiosError<unknown, any>) => void; }[] = []
@@ -78,6 +77,8 @@ export function setupAPIClient(ctx?: GetServerSidePropsContext) {
       } else {
         if (isBrowser) {
           signOut()
+        } else {
+          return Promise.reject(new AuthTokenError())
         }
       }
     }
