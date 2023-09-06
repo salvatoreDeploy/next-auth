@@ -7,7 +7,7 @@ import { useCan } from "../hooks/useCan";
 import { Can } from "../components/Can";
 
 export default function Dasboard() {
-  const { user } = useContext(AuthContext);
+  const { user, signOut } = useContext(AuthContext);
 
   useEffect(() => {
     api.get("/me").then().catch();
@@ -17,6 +17,7 @@ export default function Dasboard() {
     <>
       <h1>Dash</h1>
       <p>Usuario Logado: {user?.email}</p>
+      <button onClick={signOut}>Sign out</button>
 
       <Can permissions={["metrics.list"]}>
         <div>Métricas</div>
