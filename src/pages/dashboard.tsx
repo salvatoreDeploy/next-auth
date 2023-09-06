@@ -4,13 +4,10 @@ import { withSSRAuth } from "../utils/withSSRAuth";
 import { api } from "./api/apiClient";
 import { setupAPIClient } from "./api/api";
 import { useCan } from "../hooks/useCan";
+import { Can } from "../components/Can";
 
 export default function Dasboard() {
   const { user } = useContext(AuthContext);
-
-  const userCanSeeMetrics = useCan({
-    permissions: ["metrics.list"],
-  });
 
   useEffect(() => {
     api.get("/me").then().catch();
@@ -21,7 +18,9 @@ export default function Dasboard() {
       <h1>Dash</h1>
       <p>Usuario Logado: {user?.email}</p>
 
-      {userCanSeeMetrics && <div>Métricas</div>}
+      <Can permissions={["metrics.list"]}>
+        <div>Métricas</div>
+      </Can>
     </>
   );
 }
